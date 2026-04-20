@@ -20,10 +20,9 @@ The attacker connected to the honeypot service and executed a sequence of comman
 
 ### 🔴 Reconnaissance
 
-* `whoami`
-* `id`
-* `uname -a`
-
+* whoami (T1033 – System Owner Discovery)
+*  id (T1033 → System Owner/User Discovery)
+* uname -a (T1082 → System Information Discovery)
 ---
 
 ### 🔵 System Exploration
