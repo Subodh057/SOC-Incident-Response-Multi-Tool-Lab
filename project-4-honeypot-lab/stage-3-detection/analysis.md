@@ -12,9 +12,9 @@ The following attacker behaviors were observed:
 
 ### 🔴 Reconnaissance
 
-* `whoami`
-* `id`
-* `uname -a`
+* whoami (T1033 – System Owner Discovery)
+*  id (T1033 → System Owner/User Discovery)
+* uname -a (T1082 → System Information Discovery)
 
 ---
 
