@@ -16,6 +16,14 @@ After decoding, the payloads become:
 * `id=1 OR 1=1`
 * `id=1 UNION SELECT username,password`
 
+
+## MITRE ATT&CK Mapping
+
+* Tactic: Initial Access (TA0001)
+* Technique: Exploit Public-Facing Application (T1190)
+* Tactic: Collection (TA0009)
+* Technique: Data from Information Repositories (T1213)
+
 ## Detection Rule
 
 The most effective detection rule was:
