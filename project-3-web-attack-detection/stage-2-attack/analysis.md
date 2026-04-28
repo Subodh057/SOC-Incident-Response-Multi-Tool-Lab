@@ -24,6 +24,12 @@ Malicious HTTP requests were generated using curl:
 * Full query parameters visible
 
 ---
+### MITRE ATT&CK Mapping
+
+* Tactic: Initial Access (TA0001)
+* Technique: Exploit Public-Facing Application (T1190)
+* Tactic: Collection (TA0009)
+* Technique: Data from Information Repositories (T1213)
 
 ### 🔵 Splunk Analysis
 
