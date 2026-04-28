@@ -1,83 +1,69 @@
-# Stage 2: SSH Brute Force Attack Analysis
+🛡️ Incident Analysis Report (SOC)
 
-## 🎯 Objective
+1. What is happening
 
-To simulate and detect a brute force attack targeting SSH authentication using log analysis and network monitoring tools.
+A SSH brute force attack was performed against the target system.
 
----
+* Multiple failed login attempts observed
+* High-frequency authentication requests in short time
+* Single user account targeted repeatedly
 
-## ⚙️ Attack Simulation
+⸻
 
-A brute force attack was performed using Hydra:
+2. Type of attack
 
-hydra -l subodh-awasthi -P passwords.txt ssh://192.168.1.82
+* Classification: Credential Access / Brute Force
+* Attacker intent:
+    * Guess valid credentials
+    * Gain unauthorized SSH access
+    * Establish initial foothold
 
-This attack attempts multiple password combinations to gain unauthorized access to the SSH service.
+⸻
 
----
+3. Severity level: HIGH
 
-## 🔍 Evidence Collected
+* Direct attempt to compromise authentication
+* Repeated targeting of a specific account
+* High likelihood of account takeover if successful
 
-### 🔵 Splunk (Primary Detection)
+⸻
 
-Authentication logs (`auth.log`) were imported into Splunk for analysis.
+4. Evidence summary
 
-Observations:
+* Log Analysis (SIEM):
+    * Multiple “Failed password” entries
+    * Same user and source IP repeated
+    * Clear brute force pattern
+* Network Analysis:
+    * Repeated TCP connections to port 22
+    * High traffic volume in short duration
+* IDS Observation:
+    * No alert triggered by default rules
+    * Indicates limitation in detecting authentication-layer attacks
 
-* Multiple "Failed password" entries detected
-* High frequency of login attempts within a short time
-* Same user (`subodh-awasthi`) targeted repeatedly
-* Same source IP (`192.168.1.82`) observed across attempts
+⸻
 
-👉 This clearly indicates brute force behavior.
+5. Recommended actions
 
----
+1. Temporarily block or rate-limit source IP
+2. Enforce strong password policy
+3. Enable account lockout after failed attempts
+4. Implement multi-factor authentication (MFA)
+5. Monitor authentication logs for similar patterns
+6. Tune IDS/SIEM rules for brute force detection
 
-### 🟢 Wireshark (Network Evidence)
+⸻
 
-* Captured repeated TCP connections to port 22 (SSH)
-* High volume of packets in a short time frame
-* Multiple connection attempts without successful authentication
+6. MITRE ATT&CK Mapping
 
-👉 Confirms network-level brute force activity.
+* Tactic: Credential Access (TA0006)
+* Technique: Brute Force (T1110)
 
----
+Explanation:
+This activity maps to T1110, where attackers attempt multiple password combinations to gain access to user accounts, commonly targeting services like SSH.
 
-### 🔴 Snort (IDS Observation)
+⸻
 
-* Default Snort rules did not generate specific alerts for the brute force activity
-* Highlights limitation of IDS in detecting application-layer authentication attacks
+🔍 Summary
 
----
-
-## 🧠 Analysis
-
-The repeated failed login attempts observed in authentication logs confirm a brute force attack pattern.
-
-The attacker systematically attempted multiple passwords against a single user account in rapid succession.
-
-Splunk proved to be the most effective detection tool in this stage, as it directly analyzes authentication logs where such attacks are recorded.
-
-Wireshark provided supporting evidence at the network level, while Snort showed limited visibility due to its focus on network signatures rather than authentication events.
-
----
-
-## 📌 Conclusion
-
-The system experienced a simulated SSH brute force attack.
-
-* Splunk successfully identified the attack through log analysis
-* Wireshark confirmed repeated SSH connection attempts
-* Snort did not detect the attack, highlighting detection limitations
-
-This stage demonstrates the importance of log-based monitoring (SIEM) for detecting authentication attacks.
-
----
-
-## 🔑 Key Learnings
-
-* Brute force attacks are best detected through log analysis rather than network IDS
-* SIEM tools like Splunk provide critical visibility into authentication events
-* IDS tools may not detect application-layer attacks without proper rule tuning
-* Multi-tool correlation enhances detection accuracy
-
+This incident represents a credential access attack via brute force, where the attacker attempts to gain unauthorized access through repeated login attempts. Detection was most effective at the log level, emphasizing the importance of SIEM-based monitoring
