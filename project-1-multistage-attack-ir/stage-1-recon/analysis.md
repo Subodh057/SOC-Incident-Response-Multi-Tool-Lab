@@ -1,87 +1,68 @@
-# Stage 1: Reconnaissance Analysis (Port Scanning)
+⸻
 
-## 🎯 Objective
+🛡️ Incident Analysis Report (SOC)
 
-To identify exposed services on the target system and analyze reconnaissance activity using network traffic inspection and IDS monitoring.
+1. What is happening
 
----
+A SYN-based port scan (stealth scan) was performed against the target system.
 
-## ⚙️ Attack Simulation
+* Multiple TCP SYN packets sent across different ports
+* No full TCP handshake completed
+* Behavior indicates reconnaissance activity to identify open services
 
-A SYN-based port scan was performed against the target system:
+⸻
 
-nmap -sS 192.168.1.82
+2. Type of attack
 
-This type of scan is commonly used by attackers to stealthily discover open ports without completing full TCP handshakes.
+* Classification: Reconnaissance / Port Scanning
+* Attacker intent:
+    * Discover exposed services
+    * Map attack surface
+    * Identify entry points for exploitation
 
----
+⸻
 
-## 🔍 Evidence Collected
+3. Severity level: MEDIUM → HIGH
 
-### 🟢 Wireshark (Packet Analysis)
+* Reconnaissance is an early attack phase
+* Open services (SSH, HTTP) increase risk
+* Detection required custom tuning → indicates potential monitoring gaps
 
-* Captured multiple TCP SYN packets
-* Packets were sent to different destination ports
-* No complete TCP handshake (SYN → SYN-ACK → ACK) observed
+⸻
 
-👉 This behavior indicates a **SYN (stealth) scan**
+4. Evidence summary
 
----
+* Packet Analysis:
+    SYN packets observed without full handshake → stealth scan behavior
+* IDS Detection:
+    Default rules did not detect scan
+    Custom rule successfully triggered → highlights detection engineering importance
+* Scan Results:
+    * 22/tcp → SSH
+    * 80/tcp → HTTP
 
-### 🔴 Snort (Intrusion Detection)
+⸻
 
-* Default Snort rules did not explicitly detect the port scan
-* Custom rule was implemented to detect SYN packet patterns on loopback interface
-* The custom rule successfully triggered during the scan
+5. Recommended actions
 
-👉 This highlights:
+1. Monitor and rate-limit suspicious scanning activity
+2. Harden exposed services (SSH, HTTP)
+3. Implement stronger IDS rules for reconnaissance detection
+4. Correlate logs across network and host-level monitoring
+5. Track source IP behavior for repeated scanning attempts
 
-* Limitations of default IDS rules
-* Importance of rule tuning in detection engineering
+⸻
 
----
+6. MITRE ATT&CK Mapping
 
-### 🟡 Nmap Results (Scan Output)
+* Tactic: Reconnaissance (TA0043)
+* Technique: Network Service Discovery (T1046)
 
-The scan revealed the following open ports:
+Explanation:
+The SYN scan aligns with T1046, where attackers probe network services to identify open ports and running applications before launching targeted attacks.
 
-* **22/tcp → SSH**
-* **80/tcp → HTTP**
+⸻
 
-👉 These services represent potential attack vectors for further exploitation.
+🔍 Summary
 
----
-
-## 🧠 Analysis
-
-The observed SYN packets across multiple ports confirm that the system was subjected to a **reconnaissance scan**.
-
-The attacker attempts to:
-
-* Identify active services
-* Map the attack surface
-* Prepare for further exploitation (e.g., brute force or web attacks)
-
-While Snort did not detect the scan using default rules, Wireshark provided clear packet-level evidence. Detection was achieved through a custom rule, demonstrating the need for IDS customization.
-
----
-
-## 📌 Conclusion
-
-A SYN-based port scan was successfully simulated and analyzed.
-
-* Wireshark confirmed reconnaissance behavior through packet patterns
-* Snort required custom rule tuning for detection
-* Nmap identified exposed services (SSH and HTTP)
-
-This stage represents the **initial phase of an attack lifecycle**, where attackers gather information before launching targeted attacks.
-
----
-
-## 🔑 Key Learnings
-
-* Not all reconnaissance activities are detected by default IDS configurations
-* Packet-level analysis is critical for accurate detection
-* Custom rule development enhances IDS effectiveness
-* Multi-tool analysis provides a more complete security picture
-
+This activity represents the reconnaissance phase of an attack lifecycle, where the attacker is gathering information about exposed services. Detection required custom tuning, highlighting the importance of adaptive IDS strategies
